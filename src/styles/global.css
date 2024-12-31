@@ -1,0 +1,22 @@
+.nav-item {
+    text-transform: uppercase;
+}
+.dropdown-menu {
+    margin-top: 0.2rem;
+    box-shadow: none;
+    cursor: default;
+}
+.dropdown-menu-item {
+    cursor: pointer;
+}
+.dropdown-menu-item:hover {
+    font-weight: bold;
+}
+.nav-item:hover {
+    border-bottom: 0.2rem solid;
+}
+.nav-item:hover > .dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
