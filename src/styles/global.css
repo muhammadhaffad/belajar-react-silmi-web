@@ -23,6 +23,7 @@
     background-color: white;
     outline-offset: -1px;
     outline: 1px solid #bbb;
+    text-transform: none;
 }
 .custom-dropdown-menu-item {
     white-space: nowrap;
@@ -56,7 +57,11 @@
 .nav.nav--hidden {
     transform: translateY(-100%);
 }
-
+.prevent-select {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
 @media (max-width: 992px) { 
     .nav-list {
         position: absolute;

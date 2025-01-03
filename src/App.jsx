@@ -1,9 +1,13 @@
 import './styles/theme.bundle.css';
 import './styles/global.css';
 import useScroll from './hooks/useScroll';
-import { useEffect, useRef, useState } from 'react';
+import Dropdown from '@/components/Dropdown/Dropdown';
+import DropdownItem from '@/components/Dropdown/DropdownItem';
+import NavigationMenu from '@/components/NavigationMenu/NavigationMenu';
+import NavigationMenuItem from '@/components/NavigationMenu/NavigationMenuItem';
+import { useEffect, useState } from 'react';
 
-const navItems = [
+const navigationMenu = [
   { name: 'Our Products' },
   {
     name: 'Koko', children: [
@@ -12,13 +16,17 @@ const navItems = [
           { name: 'A' },
           {
             name: 'B', children: [
-              { name: 'A', children: [
-                { name: 'A', children: [
-                  { name: 'A' },
+              {
+                name: 'A', children: [
+                  {
+                    name: 'A', children: [
+                      { name: 'A' },
+                      { name: 'B' },
+                    ]
+                  },
                   { name: 'B' },
-                ] },
-                { name: 'B' },
-              ] },
+                ]
+              },
               { name: 'B' },
             ]
           },
@@ -26,10 +34,12 @@ const navItems = [
       },
       {
         name: 'Koko Anak', children: [
-          { name: 'C', children: [
-            { name: 'A' },
-            { name: 'B' },
-          ] },
+          {
+            name: 'C', children: [
+              { name: 'A' },
+              { name: 'B' },
+            ]
+          },
           { name: 'D' },
         ]
       },
@@ -37,89 +47,16 @@ const navItems = [
   },
   {
     name: 'Gamis', children: [
-      { name: 'Gamis Dewasa', children: [
-        { name: 'A' },
-        { name: 'B' },
-      ] },
+      {
+        name: 'Gamis Dewasa', children: [
+          { name: 'A' },
+          { name: 'B' },
+        ]
+      },
       { name: 'Gamis Anak' },
     ]
   },
 ];
-
-function NavbarItemDropdownItemList({ parentName, dropdownItems }) {
-  const [actives, setActives] = useState(Array(dropdownItems.length).fill(false));
-  const itemDropdownRefs = useRef([])
-  const handleMouseEnter = (index) => {
-    setActives((prevState) => {
-      return prevState.map((_, i) => i == index ? true : false);
-    });
-  }
-  const handleMouseLeave = () => {
-    setActives((prevState) => {
-      return prevState.map(() => false);
-    });
-  }
-  useEffect(() => {
-    const activeItem = itemDropdownRefs.current.filter((ref) => {
-      return ref.classList.contains('active');
-    }).shift()
-    // console.info(activeItem[0]);
-    if (activeItem && activeItem.lastChild.tagName == 'UL') {
-      const subDropdown = activeItem.lastChild;
-      if(subDropdown.getBoundingClientRect().right > document.body.getBoundingClientRect().right) {
-        subDropdown.classList.add('custom-dropdown-right');
-      } else {
-        subDropdown.classList.remove('custom-dropdown-right');
-      }
-    }
-    return () => {
-      if (activeItem && activeItem.lastChild.tagName == 'UL') {
-        const subDropdown = activeItem.lastChild;
-        subDropdown.classList.remove('custom-dropdown-right');
-      }
-    }
-  }, [actives]);
-  return (
-    <ul className={`custom-dropdown-menu rounded-0`}>
-      {dropdownItems.map((dropdownItem, index) => {
-        return (
-          <li ref={(elem) => itemDropdownRefs.current[index] = elem} key={`${parentName}-${dropdownItem.name}`} onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={() => handleMouseLeave()} className={`custom-dropdown-menu-item ${actives[index] ? 'active' : ''}`}>
-            <span>{dropdownItem.name}</span>{dropdownItem.children && <span style={{float: 'right', fontWeight: 'bold'}}>{actives[index] ? '−' : '+'}</span>}
-            {dropdownItem.children && <NavbarItemDropdownItemList parentName={`${parentName}-${dropdownItem.name}`} dropdownItems={dropdownItem.children} ></NavbarItemDropdownItemList>}
-          </li>
-        )
-      })}
-    </ul>
-  );
-}
-
-function NavbarItemList({ navbarItems, className, children }) {
-  const [actives, setActives] = useState(Array(navbarItems.length).fill(false));
-
-  const handleMouseEnter = (index) => {
-    setActives((prevState) => {
-      return prevState.map((_, i) => i == index ? true : false);
-    });
-  }
-  const handleMouseLeave = () => {
-    setActives((prevState) => {
-      return prevState.map(() => false);
-    });
-  }
-  return (
-    <ul className={`nav-list d-flex align-items-center p-0 m-0 flex-row flex-grow-1 ${className}`}>
-      {navbarItems && navbarItems?.map((navbarItem, index) => {
-        return (
-          <li key={navbarItem.name} className={`cursor-pointer nav-item d-flex align-items-center h-100 ${actives[index] ? 'active' : ''}`} onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={() => handleMouseLeave()}>
-            <span className="px-3">{navbarItem.name}</span>{navbarItem.children && <span className="pe-3" style={{float: 'right', fontWeight: 'bold'}}>{actives[index] ? '−' : '+'}</span>}
-            {navbarItem.children && <NavbarItemDropdownItemList dropdownItems={navbarItem.children}></NavbarItemDropdownItemList>}
-          </li>
-        )
-      })}
-      {children}
-    </ul>
-  );
-}
 
 function Navbar() {
   const [isHidden, setIsHidden] = useState(false);
@@ -127,9 +64,9 @@ function Navbar() {
 
   useEffect(() => {
     if (scroll.y > 100 && scroll.y - scroll.lastY > 0) {
-      setIsHidden(true); 
+      setIsHidden(true);
     } else {
-      setIsHidden(false); 
+      setIsHidden(false);
     }
   }, [scroll.y, scroll.lastY]);
   return (
@@ -148,7 +85,17 @@ function Navbar() {
             }}>Anda belum login, silahkan <b className='fw-bold'><u>login di sini</u></b></span>
           </div>
           <div className="d-flex flex-grow-1">
-            <NavbarItemList navbarItems={navItems} className={'justify-content-center d-lg-flex'}></NavbarItemList>
+            <NavigationMenu className={'justify-content-center d-lg-flex'}>
+              {navigationMenu && navigationMenu?.map((navItem) => (
+                <NavigationMenuItem key={navItem.name} navItem={navItem}>
+                  {navItem.children && <Dropdown>
+                    {navItem.children.map(
+                      (dropdownItem) => <DropdownItem key={`${navItem.name}-${dropdownItem.name}`} dropdownItem={dropdownItem}></DropdownItem>
+                    )}
+                  </Dropdown>}
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenu>
             <div className='d-flex align-items-center'>
               <search>
                 <span className="nav-link position-relative search-trigger cursor-pointer mx-0 disable-child-pointer border-0 bg-transparent text-body p-2">
