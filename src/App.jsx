@@ -1,20 +1,120 @@
 import './styles/theme.bundle.css';
 import './styles/global.css';
+import useScroll from './hooks/useScroll';
+import { useEffect, useRef, useState } from 'react';
 
-function NavbarMenu({ menus, className, children }) {
+const navItems = [
+  { name: 'Our Products' },
+  {
+    name: 'Koko', children: [
+      {
+        name: 'Koko Dewasa', children: [
+          { name: 'A' },
+          {
+            name: 'B', children: [
+              { name: 'A', children: [
+                { name: 'A', children: [
+                  { name: 'A' },
+                  { name: 'B' },
+                ] },
+                { name: 'B' },
+              ] },
+              { name: 'B' },
+            ]
+          },
+        ]
+      },
+      {
+        name: 'Koko Anak', children: [
+          { name: 'C', children: [
+            { name: 'A' },
+            { name: 'B' },
+          ] },
+          { name: 'D' },
+        ]
+      },
+    ]
+  },
+  {
+    name: 'Gamis', children: [
+      { name: 'Gamis Dewasa', children: [
+        { name: 'A' },
+        { name: 'B' },
+      ] },
+      { name: 'Gamis Anak' },
+    ]
+  },
+];
+
+function NavbarItemDropdownItemList({ parentName, dropdownItems }) {
+  const [actives, setActives] = useState(Array(dropdownItems.length).fill(false));
+  const itemDropdownRefs = useRef([])
+  const handleMouseEnter = (index) => {
+    setActives((prevState) => {
+      return prevState.map((_, i) => i == index ? true : false);
+    });
+  }
+  const handleMouseLeave = () => {
+    setActives((prevState) => {
+      return prevState.map(() => false);
+    });
+  }
+  useEffect(() => {
+    const activeItem = itemDropdownRefs.current.filter((ref) => {
+      return ref.classList.contains('active');
+    }).shift()
+    // console.info(activeItem[0]);
+    if (activeItem && activeItem.lastChild.tagName == 'UL') {
+      const subDropdown = activeItem.lastChild;
+      if(subDropdown.getBoundingClientRect().right > document.body.getBoundingClientRect().right) {
+        subDropdown.classList.add('custom-dropdown-right');
+      } else {
+        subDropdown.classList.remove('custom-dropdown-right');
+      }
+    }
+    return () => {
+      if (activeItem && activeItem.lastChild.tagName == 'UL') {
+        const subDropdown = activeItem.lastChild;
+        subDropdown.classList.remove('custom-dropdown-right');
+      }
+    }
+  }, [actives]);
   return (
-    <ul className={`d-flex align-items-center p-0 m-0 flex-row flex-grow-1 ${className}`}>
-      {menus?.map(menu => {
+    <ul className={`custom-dropdown-menu rounded-0`}>
+      {dropdownItems.map((dropdownItem, index) => {
         return (
-          <li key={menu.name} className='dropdown cursor-pointer nav-item d-flex align-items-center h-100'>
-            <span className="px-3" style={{pointerEvents: 'none'}}>{menu.name}</span>
-            <ul className={`dropdown-menu rounded-0 ${menu.subMenus ? null : 'd-none' }`}>
-              {menu.subMenus && [menu.subMenus.map((subMenu) => {
-                return <li key={subMenu.name} className='dropdown-menu-item'><span>{subMenu.name}</span></li>
-              })]}
-            </ul>
+          <li ref={(elem) => itemDropdownRefs.current[index] = elem} key={`${parentName}-${dropdownItem.name}`} onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={() => handleMouseLeave()} className={`custom-dropdown-menu-item ${actives[index] ? 'active' : ''}`}>
+            <span>{dropdownItem.name}</span>{dropdownItem.children && <span style={{float: 'right', fontWeight: 'bold'}}>{actives[index] ? '−' : '+'}</span>}
+            {dropdownItem.children && <NavbarItemDropdownItemList parentName={`${parentName}-${dropdownItem.name}`} dropdownItems={dropdownItem.children} ></NavbarItemDropdownItemList>}
           </li>
-        );
+        )
+      })}
+    </ul>
+  );
+}
+
+function NavbarItemList({ navbarItems, className, children }) {
+  const [actives, setActives] = useState(Array(navbarItems.length).fill(false));
+
+  const handleMouseEnter = (index) => {
+    setActives((prevState) => {
+      return prevState.map((_, i) => i == index ? true : false);
+    });
+  }
+  const handleMouseLeave = () => {
+    setActives((prevState) => {
+      return prevState.map(() => false);
+    });
+  }
+  return (
+    <ul className={`nav-list d-flex align-items-center p-0 m-0 flex-row flex-grow-1 ${className}`}>
+      {navbarItems && navbarItems?.map((navbarItem, index) => {
+        return (
+          <li key={navbarItem.name} className={`cursor-pointer nav-item d-flex align-items-center h-100 ${actives[index] ? 'active' : ''}`} onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={() => handleMouseLeave()}>
+            <span className="px-3">{navbarItem.name}</span>{navbarItem.children && <span className="pe-3" style={{float: 'right', fontWeight: 'bold'}}>{actives[index] ? '−' : '+'}</span>}
+            {navbarItem.children && <NavbarItemDropdownItemList dropdownItems={navbarItem.children}></NavbarItemDropdownItemList>}
+          </li>
+        )
       })}
       {children}
     </ul>
@@ -22,33 +122,33 @@ function NavbarMenu({ menus, className, children }) {
 }
 
 function Navbar() {
-  const menus = [
-    { name: 'Our Products' },
-    { name: 'Koko', subMenus: [
-      {name: 'Koko Dewasa'},
-      {name: 'Koko Anak'},
-    ] },
-    { name: 'Gamis', subMenus: [
-      {name: 'Gamis Dewasa'},
-      {name: 'Gamis Anak'},
-    ] },
-  ];
+  const [isHidden, setIsHidden] = useState(false);
+  const scroll = useScroll();
+
+  useEffect(() => {
+    if (scroll.y > 100 && scroll.y - scroll.lastY > 0) {
+      setIsHidden(true); 
+    } else {
+      setIsHidden(false); 
+    }
+  }, [scroll.y, scroll.lastY]);
   return (
-    <nav className='border-bottom sticky-top bg-white'>
-      <div className="container-fluid d-flex">
+    <nav className={`nav border-bottom sticky-top bg-white ${isHidden ? 'nav--hidden' : null}`}>
+      <div className="container-fluid d-flex justify-content-between">
+        <button className='d-inline-block d-lg-none'>Ham</button>
         <a className="navbar-brand fw-bold fs-3 m-0 p-0 flex-shrink-0" href="https://silmiofficial.com">
           <div className="my-3 d-flex align-items-center">
             <img src="https://silmiofficial.com/assets/images/logos/logo-silmi-horizontal.png" alt="" style={{ height: "3rem" }} />
           </div>
         </a>
-        <div className='d-flex flex-column w-100'>
-          <div dir='rtl'>
+        <div className='d-flex flex-column w-lg-100'>
+          <div dir='rtl' className='d-none d-lg-block'>
             <span className='text-nowrap' style={{
               fontSize: '0.8rem'
             }}>Anda belum login, silahkan <b className='fw-bold'><u>login di sini</u></b></span>
           </div>
           <div className="d-flex flex-grow-1">
-            <NavbarMenu menus={menus} className={'justify-content-center'}></NavbarMenu>
+            <NavbarItemList navbarItems={navItems} className={'justify-content-center d-lg-flex'}></NavbarItemList>
             <div className='d-flex align-items-center'>
               <search>
                 <span className="nav-link position-relative search-trigger cursor-pointer mx-0 disable-child-pointer border-0 bg-transparent text-body p-2">
