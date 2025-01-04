@@ -1,0 +1,27 @@
+.custom-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    display: none;
+    flex-direction: column;
+    padding: 0;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin: 0;
+    min-width: 12rem;
+    list-style: none;
+    background-color: white;
+    outline-offset: -1px;
+    outline: 1px solid #bbb;
+    text-transform: none;
+}
+.custom-dropdown-right {
+    left: -100% !important;
+    right: 100% !important;
+}
+@media (max-width: 992px) { 
+    .custom-dropdown-menu {
+        position: static;
+        padding-left: 1rem;
+        outline: none;
+    }
+}

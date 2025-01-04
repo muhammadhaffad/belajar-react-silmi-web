@@ -11,7 +11,9 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, "./src")
+      '@': path.resolve(__dirname, "./src"),
+      '@component': path.resolve(__dirname, "./src/components"),
+      '@style': path.resolve(__dirname, "./src/styles")
     }
   },
   server: {

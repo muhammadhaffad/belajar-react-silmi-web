@@ -1,4 +1,5 @@
 import { forwardRef } from "react";
+import '@style/dropdown/dropdown.css';
 
 const Dropdown = forwardRef((props, ref) => {
     const { children }= props;
