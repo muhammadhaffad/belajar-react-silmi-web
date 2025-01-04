@@ -57,7 +57,9 @@ const navigationMenu = [
     ]
   },
 ];
+const NavbarSearch = () => {
 
+}
 function Navbar() {
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
   const [isNavMenuVisible, setIsNavMenuVisible] = useState(true);
@@ -81,12 +83,10 @@ function Navbar() {
         </a>
         <div className='d-flex flex-column w-lg-100'>
           <div dir='rtl' className='d-none d-lg-block'>
-            <span className='text-nowrap' style={{
-              fontSize: '0.8rem'
-            }}>Anda belum login, silahkan <b className='fw-bold'><u>login di sini</u></b></span>
+            <span className='text-nowrap'><small>Anda belum login, silahkan <b className='fw-bold'><u>login di sini</u></b></small></span>
           </div>
           <div className="d-flex flex-grow-1">
-            <NavigationMenu className={`${!isNavMenuVisible ? 'show-menu' : 'hide-menu'} justify-content-center d-lg-flex border-end border-lg-0`}>
+            <NavigationMenu className={`${!isNavMenuVisible ? 'show-menu' : 'hide-menu'} d-lg-flex border-end border-lg-0`}>
               <li className='d-lg-none nav-item d-flex justify-content-between px-3 pb-3 border-bottom'>
                 <img src="https://silmiofficial.com/assets/images/logos/logo-silmi-horizontal.png" alt="" style={{ height: "3rem" }} />
                 <button onClick={(event) => {event.stopPropagation(); setIsNavMenuVisible(!isNavMenuVisible)}} className='btn p-2 d-block ms-auto'><i className="icon bi bi-x-lg"></i></button>
@@ -102,20 +102,22 @@ function Navbar() {
               ))}
             </NavigationMenu>
             <div className='d-flex align-items-center'>
-              <search>
-                <span className="nav-link position-relative search-trigger cursor-pointer mx-0 disable-child-pointer border-0 bg-transparent text-body p-2">
-                  <i className="fs-5 bi bi-search"></i>
-                </span>
-                <div className='position-absolute end-0 top-0 bg-white vh-100 w-100' style={{maxWidth: '576px'}}>
-                  <div className="d-flex p-3 border-bottom border-start" style={{height: '5rem'}}>
-                    <div className='d-flex gap-3 align-items-center w-100'>
-                      <i className="fs-5 bi bi-search"></i>
-                      <input type="text" className='form-control form-control-sm rounded-0 w-100' />
+              <div className="search-wrapper">
+                <search className='d-flex position-relative'>
+                  <input type="text" className='position-absolute top-0 bottom-0 my-auto start-100 p-1 form-control rounded-0' style={{width: '15vw', minWidth: '150px', maxWidth: '200px', transform: 'translateX(-100%)'}} placeholder='Cari...' />
+                  <button className="btn p-2 position-relative">
+                    <i className="fs-5 bi bi-search"></i>
+                  </button>
+                </search>
+                  <div className='position-absolute end-0 top-0 bg-white vh-100 w-50 d-none'>
+                    <div className="d-flex p-3 border-bottom border-start" style={{height: '5rem'}}>
+                      <div className='d-flex gap-3 align-items-center w-100'>
+                        <i className="d-none d-lg-block fs-5 bi bi-search"></i>
+                      </div>
+                      <button onClick={(event) => {event.stopPropagation(); setIsNavMenuVisible(!isNavMenuVisible)}} className='btn p-3 d-block ms-auto' style={{marginRight: '-1rem'}}><i className="icon bi bi-x-lg"></i></button>
                     </div>
-                    <button onClick={(event) => {event.stopPropagation(); setIsNavMenuVisible(!isNavMenuVisible)}} className='btn p-3 d-block ms-auto' style={{marginRight: '-1rem'}}><i className="icon bi bi-x-lg"></i></button>
                   </div>
-                </div>
-              </search>
+              </div>
             </div>
           </div>
         </div>
