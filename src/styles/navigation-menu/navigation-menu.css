@@ -5,6 +5,7 @@
 @media (min-width: 1280px) {
     .nav-list {
         justify-content: center;
+        margin-left: 0rem !important;
     }
 }
 @media (max-width: 992px) { 
@@ -25,6 +26,7 @@
         max-width: 576px;
         padding-top: 1rem !important;
         padding-bottom: 1rem !important;
+        margin-left: 0rem !important;
     }
     .nav-list > .nav-item {
         height: auto !important;

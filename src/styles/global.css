@@ -13,3 +13,112 @@
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
 }
+
+.navbar__actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.navbar__search {
+    position: relative;
+}
+/* .navbar__search-wrapper {
+    all: unset;
+} */
+.navbar__search-inner-wrapper {
+    display: flex;
+    position: relative;
+}
+.navbar__search-back-button {
+    padding: .5rem;
+    position: relative;
+    display: none;
+}
+.navbar__search-back-button:hover > i {
+    background: var(--bs-dark);
+    color: white;
+}
+.navbar__search-button, .navbar__search-clear-button {
+    position: relative;
+    padding: .5rem;
+}
+.navbar__search-clear-button:hover > i {
+    background: var(--bs-dark);
+    color: white;
+}
+.navbar__search-input {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    left: 100%;
+    transform: translateX(-100%);
+    padding: .25rem;
+    border-radius: 0px;
+    width: 15vw;
+    min-width: 200px;
+    max-width: 300px;
+    background: var(--bs-light);
+}
+.navbar__search-input:focus {
+    background: var(--bs-light);
+}
+.navbar__search-result {
+    padding: 1rem;
+    position: absolute;
+    right: 0;
+    background: white;
+    width: 330px;
+    height: 100vh;
+}
+.navbar__search-result-list {
+    margin-bottom: 0px;
+}
+.navbar__search-result-list > li.navbar__search-result-item + li.navbar__search-result-item {
+    margin-top: 1rem;
+}
+.navbar__search-result-card {
+    display: flex;
+    gap: .5rem;
+}
+.navbar__search-result-list {
+    padding-left: 0px;
+    list-style: none;
+}
+@media (max-width: 992px) {
+    .navbar__search-input {
+        display: none;
+    }
+    .navbar__search.visible {
+        position: absolute;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        display: flex;
+        background: var(--bs-light);
+    }
+    .navbar__search.visible .navbar__search-back-button {
+        display: initial;
+    }
+    .navbar__search.visible .navbar__search-inner-wrapper {
+        background: var(--bs-light);
+        border-bottom: 1px solid #d1d5db;
+        width: 100%;
+        display: block;
+        margin: 0 1rem;
+    }
+    .navbar__search.visible .navbar__search-inner-wrapper:focus-within {
+        border-bottom: 1px solid var(--bs-dark);
+    }
+    .navbar__search.visible .navbar__search-input {
+        display: initial;
+        max-width: none;
+        border: none;
+        width: calc(100% - 3rem);
+    }
+    .navbar__search.visible .navbar__search-button, .navbar__search.visible .navbar__search-clear-button {
+        display: block;
+        float: right;
+    }
+}

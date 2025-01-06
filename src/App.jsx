@@ -5,7 +5,7 @@ import Dropdown from '@component/Dropdown/Dropdown';
 import DropdownItem from '@component/Dropdown/DropdownItem';
 import NavigationMenu from '@component/NavigationMenu/NavigationMenu';
 import NavigationMenuItem from '@component/NavigationMenu/NavigationMenuItem';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const navigationMenu = [
   { name: 'Our Products' },
@@ -63,7 +63,21 @@ const NavbarSearch = () => {
 function Navbar() {
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
   const [isNavMenuVisible, setIsNavMenuVisible] = useState(true);
+  const [querySearch, setQuerySearch] = useState('');
+  const navbarSearchRef = useRef();
   const scroll = useScroll();
+
+  function handleClickSearch() {
+    if (document.body.clientWidth < 992) {
+      navbarSearchRef.current.classList.add('visible');
+    }
+  }
+  function handleClickSearchBack() {
+    setQuerySearch('');
+    if (document.body.clientWidth < 992) {
+      navbarSearchRef.current.classList.remove('visible');
+    }
+  }
 
   useEffect(() => {
     if (scroll.y > 100 && scroll.y - scroll.lastY > 0) {
@@ -75,7 +89,7 @@ function Navbar() {
   return (
     <nav className={`nav border-bottom sticky-top bg-white ${!isNavbarVisible ? 'nav--hidden' : null}`}>
       <div className="container-fluid d-flex justify-content-between">
-        <button className='btn p-0 d-inline-block d-lg-none' onClick={(event) => {event.stopPropagation(); setIsNavMenuVisible(!isNavMenuVisible)}}><i className="icon fs-3 bi bi-list"></i></button>
+        <button className='btn p-0 d-inline-block d-lg-none' onClick={(event) => { event.stopPropagation(); setIsNavMenuVisible(!isNavMenuVisible) }}><i className="icon fs-3 bi bi-list"></i></button>
         <a className="navbar-brand fw-bold fs-3 m-0 p-0 flex-shrink-0" href="https://silmiofficial.com">
           <div className="my-3 d-flex align-items-center">
             <img src="https://silmiofficial.com/assets/images/logos/logo-silmi-horizontal.png" alt="" style={{ height: "3rem" }} />
@@ -89,7 +103,7 @@ function Navbar() {
             <NavigationMenu className={`${!isNavMenuVisible ? 'show-menu' : 'hide-menu'} d-lg-flex border-end border-lg-0`}>
               <li className='d-lg-none nav-item d-flex justify-content-between px-3 pb-3 border-bottom'>
                 <img src="https://silmiofficial.com/assets/images/logos/logo-silmi-horizontal.png" alt="" style={{ height: "3rem" }} />
-                <button onClick={(event) => {event.stopPropagation(); setIsNavMenuVisible(!isNavMenuVisible)}} className='btn p-2 d-block ms-auto'><i className="icon bi bi-x-lg"></i></button>
+                <button onClick={(event) => { event.stopPropagation(); setIsNavMenuVisible(!isNavMenuVisible) }} className='btn p-2 d-block ms-auto'><i className="icon bi bi-x-lg"></i></button>
               </li>
               {navigationMenu && navigationMenu?.map((navItem) => (
                 <NavigationMenuItem key={navItem.name} navItem={navItem}>
@@ -101,23 +115,33 @@ function Navbar() {
                 </NavigationMenuItem>
               ))}
             </NavigationMenu>
-            <div className='d-flex align-items-center'>
-              <div className="search-wrapper">
-                <search className='d-flex position-relative'>
-                  <input type="text" className='position-absolute top-0 bottom-0 my-auto start-100 p-1 form-control rounded-0' style={{width: '15vw', minWidth: '150px', maxWidth: '200px', transform: 'translateX(-100%)'}} placeholder='Cari...' />
-                  <button className="btn p-2 position-relative">
-                    <i className="fs-5 bi bi-search"></i>
-                  </button>
+            <div className='navbar__actions'>
+              <div ref={navbarSearchRef} className="navbar__search navbar__search-wrapper">
+                <search className='navbar__search-inner-wrapper'>
+                  <input value={querySearch} onChange={(event) => setQuerySearch(event.target.value)} type="text" className='navbar__search-input visible form-control' placeholder='Cari...' />
+                  <button onClick={handleClickSearchBack} className='navbar__search-back-button btn'><i className="fs-5 bi bi-chevron-left"></i></button>
+                  {querySearch === '' ? <button onClick={handleClickSearch} className="navbar__search-button btn"><i className="fs-5 bi bi-search"></i></button> : <button className="navbar__search-clear-button btn" onClick={(event) => { event.stopPropagation(); setQuerySearch('') }}><i className="fs-5 bi bi-x-lg"></i></button>}
                 </search>
-                  <div className='position-absolute end-0 top-0 bg-white vh-100 w-50 d-none'>
-                    <div className="d-flex p-3 border-bottom border-start" style={{height: '5rem'}}>
-                      <div className='d-flex gap-3 align-items-center w-100'>
-                        <i className="d-none d-lg-block fs-5 bi bi-search"></i>
-                      </div>
-                      <button onClick={(event) => {event.stopPropagation(); setIsNavMenuVisible(!isNavMenuVisible)}} className='btn p-3 d-block ms-auto' style={{marginRight: '-1rem'}}><i className="icon bi bi-x-lg"></i></button>
-                    </div>
-                  </div>
+                <article className='navbar__search-result'>
+                  <span className='fw-bold text-uppercase d-block mb-2'>Produk</span>
+                  <ul className='navbar__search-result-list'>
+                    {
+                      [...Array(4)].map((e, i) => <li key={i} className='navbar__search-result-item'>
+                        <div className="navbar__search-result-card">
+                          <img src="http://silmiofficial.com/storage/produk/YuG240UUnG7DFIDM9eOia5wgKO9KxYWhMYRQhk1I.webp" width={100} alt="" />
+                          <div>
+                            <small className='text-nowrap d-block'>Inayah</small>
+                            <span className='text-nowrap fw-bold d-block'>Inayah Gamis Anak</span>
+                            <div className='text-nowrap d-flex gap-1'><small className='text-danger'>Rp250.000</small><small><s>Rp295.000</s></small></div>
+                          </div>
+                        </div>
+                      </li>)
+                    }
+                  </ul>
+                  <span className='fw-bold d-block mt-2'><u>Lihat Semua</u></span>
+                </article>
               </div>
+              <button className='btn p-0'><i className="fs-5 bi bi-bag-fill"></i></button>
             </div>
           </div>
         </div>
