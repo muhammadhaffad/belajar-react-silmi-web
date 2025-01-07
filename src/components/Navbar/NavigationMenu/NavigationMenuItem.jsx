@@ -1,5 +1,5 @@
 import { useState } from "react";
-import '@style/navigation-menu/navigation-menu-item.css';
+import '@style/navbar/navigation-menu/navigation-menu-item.css';
 
 const NavigationMenuItem = ({navItem, children}) => {
     const [isActive, setIsActive] = useState(false);

@@ -1,0 +1,23 @@
+
+.navbar__search-input {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    left: 100%;
+    transform: translateX(-100%);
+    padding: .25rem;
+    border-radius: 0px;
+    width: 15vw;
+    min-width: 200px;
+    max-width: 300px;
+    background: var(--bs-light);
+}
+.navbar__search-input:focus {
+    background: var(--bs-light);
+}
+@media (max-width: 992px) {
+    .navbar__search-input {
+        display: none;
+    }
+}

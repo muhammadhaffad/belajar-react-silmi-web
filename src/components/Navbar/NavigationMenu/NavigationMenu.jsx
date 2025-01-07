@@ -1,4 +1,4 @@
-import '@style/navigation-menu/navigation-menu.css';
+import '@style/navbar/navigation-menu/navigation-menu.css';
 
 const NavigationMenu = ({className, children}) => {
     return (
