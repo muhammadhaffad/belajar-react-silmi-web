@@ -5,15 +5,76 @@
 .nav {
     transition: transform 150ms ease-in-out;
 }
-.nav.nav--hidden {
-    transform: translateY(-100%);
-}
 .prevent-select {
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
 }
-
+.navbar {
+    all: unset;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    display: flex;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+    transition: transform 150ms ease-in-out;
+    border-bottom: 1px solid #e5e7eb;
+    background: white;
+}
+.navbar.navbar--hidden {
+    transform: translateY(-100%);
+}
+.navbar__container {
+    display: flex;
+    justify-content: space-between;
+}
+.navbar__hamburger-button {
+    padding: 0px;
+    display: none;
+}
+.navbar__brand {
+    font-weight: bold;
+    font-size: calc(1.3rem + .6vw);
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+}
+.navbar__brand-logo {
+    display: flex;
+    align-items: center;
+    margin: 1rem 0;
+}
+.navbar__brand-logo > img {
+    height: 3rem;
+}
+.navbar__toolbar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+.navbar__menu-header--mobile {
+    display: none !important;
+    justify-content: space-between;
+    padding: 0 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+.navbar__menu-close {
+    padding: .5rem;
+    display: block;
+    margin-left: auto;
+}
+.navbar__header-top {
+    display: block;
+}
+.navbar__controls-container {
+    display: flex;
+    flex-grow: 1;
+}
 .navbar__actions {
     display: flex;
     align-items: center;
@@ -22,9 +83,6 @@
 .navbar__search {
     position: relative;
 }
-/* .navbar__search-wrapper {
-    all: unset;
-} */
 .navbar__search-inner-wrapper {
     display: flex;
     position: relative;
@@ -106,6 +164,9 @@
     list-style: none;
 }
 @media (max-width: 992px) {
+    .navbar__hamburger-button {
+        display: inline-block;
+    }
     .navbar__search-input {
         display: none;
     }
@@ -154,4 +215,13 @@
         width: 1.25rem;
         height: 1.25rem;
     }    
+    .navbar__toolbar {
+        width: initial;
+    }
+    .navbar__header-top {
+        display: none;
+    }
+    .navbar__menu-header--mobile {
+        display: flex !important;
+    }
 }

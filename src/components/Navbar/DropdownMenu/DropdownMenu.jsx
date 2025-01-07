@@ -1,13 +1,13 @@
 import { forwardRef } from "react";
-import '@style/dropdown/dropdown.css';
+import '@style/dropdown-menu/dropdown-menu.css';
 
 const Dropdown = forwardRef((props, ref) => {
     const { children }= props;
     return (
-        <ul ref={ref} className={`custom-dropdown-menu rounded-0`}>
+        <ul ref={ref} className={`dropdown__menu`}>
             {children}
         </ul>
     );
 });
-Dropdown.displayName = 'Dropdown';
+Dropdown.displayName = 'DropdownMenu';
 export default Dropdown;

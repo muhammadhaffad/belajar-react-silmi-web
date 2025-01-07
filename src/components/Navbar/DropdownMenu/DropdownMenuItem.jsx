@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import Dropdown from "./Dropdown";
-import '@style/dropdown/dropdown-item.css';
+import Dropdown from "./DropdownMenu";
+import '@style/dropdown-menu/dropdown-menu-item.css';
 
 const DropdownItem = ({ parentName, dropdownItem }) => {
     const [isActive, setIsActive] = useState(false);
@@ -19,9 +19,9 @@ const DropdownItem = ({ parentName, dropdownItem }) => {
         if (subMenuRef.current) {
             const rect = subMenuRef.current.getBoundingClientRect();
             if (rect.right > window.innerWidth) {
-                subMenuRef.current.classList.add('custom-dropdown-right');
+                subMenuRef.current.classList.add('dropdown__menu--right');
             } else {
-                subMenuRef.current.classList.remove('custom-dropdown-right');
+                subMenuRef.current.classList.remove('dropdown__menu--right');
             }
         }
     }
@@ -30,7 +30,7 @@ const DropdownItem = ({ parentName, dropdownItem }) => {
     }, [isActive]);
     return (
         <>
-            <li onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} className={`custom-dropdown-menu-item prevent-select ${isActive ? 'active' : ''}`}>
+            <li onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} className={`dropdown__menu-item prevent-select ${isActive ? 'active' : ''}`}>
                 <span>{dropdownItem.name}</span>{dropdownItem.children && <span className="pe-3 pe-lg-0" onClick={handleClick} style={{ float: 'right', fontWeight: 'bold' }}>{isActive ? '−' : '+'}</span>}
                 {dropdownItem.children && <Dropdown ref={subMenuRef}>
                     {dropdownItem.children.map(

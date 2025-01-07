@@ -1,4 +1,4 @@
-.custom-dropdown-menu {
+.dropdown__menu {
     position: absolute;
     top: 100%;
     display: none;
@@ -13,13 +13,14 @@
     outline-offset: -1px;
     outline: 1px solid #bbb;
     text-transform: none;
+    border-radius: 0px;
 }
-.custom-dropdown-right {
+.dropdown__menu--right {
     left: -100% !important;
     right: 100% !important;
 }
 @media (max-width: 992px) { 
-    .custom-dropdown-menu {
+    .dropdown__menu {
         position: static;
         padding-left: 1rem;
         outline: none;
