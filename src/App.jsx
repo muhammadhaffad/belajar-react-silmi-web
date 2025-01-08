@@ -1,7 +1,12 @@
 import './styles/theme.bundle.css';
 import './styles/global.css';
 import Navbar from '@component/Navbar/Navbar';
-import { useState } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules';
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
 const navigationMenu = [
   { name: 'Our Products' },
@@ -59,15 +64,22 @@ const sliderImages = [
   'http://silmiofficial.com/assets/images/banners/renngganis.jpg',
   'http://silmiofficial.com/assets/images/banners/CLEREANCE%20SALE.jpg'
 ]
-const BannerSlider = () => {
-  const [index, setIndex] = useState(0);
+const BannerCarousel = () => {
   return (
     <div>
-      <img src={sliderImages[index]} alt="" width={'100%'} />
-      <div className="d-flex w-100 justify-content-between">
-        <button onClick={() => setIndex((index + sliderImages.length - 1) % sliderImages.length)}>Prev</button>
-        <button onClick={() => setIndex((index + 1) % sliderImages.length)}>Next</button>
-      </div>
+      <Swiper
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+        }}
+        loop={true}
+        modules={[Autoplay]} 
+        style={{
+          aspectRatio: 2,
+        }}
+      >
+        {sliderImages.map((image, i) => <SwiperSlide key={i}><img width={'100%'} src={image} /></SwiperSlide>)}
+      </Swiper>
     </div>
   )
 }
@@ -77,7 +89,7 @@ function App() {
     <>
       <header>
         <Navbar navigationMenu={navigationMenu}></Navbar>
-        <BannerSlider></BannerSlider>
+        <BannerCarousel></BannerCarousel>
       </header>
       <section>
         <nav></nav>
