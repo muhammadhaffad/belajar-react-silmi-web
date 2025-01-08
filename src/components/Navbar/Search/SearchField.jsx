@@ -16,9 +16,9 @@ const SearchField = ({ querySearch, setQuerySearch, handleClickSearchBack, handl
             {
                 (querySearch === '')
                     ?
-                    <button onClick={() => {handleClickSearch(); ref.current.focus();}} className="navbar__search-button btn"><i className="fs-5 bi bi-search"></i></button>
+                    <button key={'search'} onClick={() => {handleClickSearch(); ref.current.focus();}} className="navbar__search-button btn"><i className="fs-5 bi bi-search"></i></button>
                     :
-                    <button className="navbar__search-clear-button btn" onClick={(e) => { e.stopPropagation(); setQuerySearch('') }}><i className="fs-5 bi bi-x-lg"></i></button>
+                    <button key={'clear'} className="navbar__search-clear-button btn" onClick={(e) => { e.stopPropagation(); setQuerySearch('') }}><i className="fs-5 bi bi-x-lg"></i></button>
             }
         </search>
     )

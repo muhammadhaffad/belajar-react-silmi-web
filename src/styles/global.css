@@ -84,6 +84,62 @@
     align-items: center;
     gap: 1rem;
 }
+.filter {
+    width: 100%;
+    position: sticky;
+    top: 1rem;
+}
+.filter__wrapper {
+    border: 1px solid var(--bs-dark);
+    padding: .25rem;
+    width: 100%;
+}
+.filter__panel {
+    display: flex;
+    gap: .25rem;
+}
+.filter__panel-item {
+    position: relative;
+}
+.filter__button {
+    padding: 1rem;
+    text-transform: uppercase;
+    transition: none;
+    background: white;
+}
+.filter__button.active, .filter__button.active:hover {
+    border: 1px solid var(--bs-dark);
+    border-bottom: none;
+    z-index: 3;
+    position: relative;
+}
+.filter__button > span {
+    font-weight: bold;
+    margin-left: 1rem;
+}
+.filter__button:hover {
+    border: 1px solid var(--bs-dark);
+}
+.filter__options {
+    display: none;
+}
+.filter__button.active + .filter__options {
+    display: flex;
+    position: absolute;
+    top: calc(100% - 2px);
+    z-index: 2;
+}
+.filter__options-container {
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+    max-width: 300px;
+    max-height: 200px;
+    overflow-y: hidden;
+    padding: 1rem;
+    border: 1px solid var(--bs-dark);
+    background: white;
+}
 @media (max-width: 992px) {
     .navbar__header {
         width: 100%;
