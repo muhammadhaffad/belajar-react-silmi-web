@@ -8,7 +8,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { getTrackBackground, Range } from 'react-range';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const navigationMenu = [
   { name: 'Our Products' },
@@ -78,6 +78,13 @@ const colors = [
 const sizes = [
   '02', '04', '06', '08', '10', '12', '14', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL'
 ]
+const sorting = [
+  {sortCode: '', name: 'Paling Sesuai'},
+  {sortCode: '3', name: 'Rilis: Baru ke Lama'},
+  {sortCode: '4', name: 'Rilis: Lama ke Baru'},
+  {sortCode: '1', name: 'Harga: Rendah ke Tinggi'},
+  {sortCode: '2', name: 'Harga: Tinggi ke Rendah'},
+]
 const BannerCarousel = () => {
   return (
     <div>
@@ -100,7 +107,9 @@ const BannerCarousel = () => {
 function App() {
   const [values, setValues] = useState([100000, 400000]);
   const [searchColor, setSerachColor] = useState('');
+  const [sortBy, setSortBy] = useState(sorting[0]);
   const [filterActive, setFilterActive] = useState(0);
+  const filterRefs = useRef([]);
   const min = 0;
   const max = 500000;
   const step = 10000;
@@ -114,7 +123,22 @@ function App() {
       setFilterActive(index);
     }
   }
-
+  const handleClickSortBy = (sortCode) => {
+    const sortSelected = sorting.filter((sort)=>sort.sortCode === sortCode).shift();
+    setSortBy(sortSelected);
+    setFilterActive(0);
+  }
+  useEffect(() => {
+    function handleClick(event) {
+      if (filterRefs.current[filterActive - 1] && !filterRefs.current[filterActive - 1].contains(event.target)) {
+        setFilterActive(0);
+      }
+    }
+    document.body.addEventListener('click', handleClick)
+    return () => {
+      document.body.removeEventListener('click', handleClick)
+    }
+  });
   return (
     <>
       <header>
@@ -122,15 +146,19 @@ function App() {
         <BannerCarousel></BannerCarousel>
       </header>
       <section className='container-fluid vh-100'>
-        <nav className='filter' style={{
-          height: '100px'
-        }}>
+        <nav className='filter'>
+          <div>asdas</div>
           <div className="filter__wrapper">
             <div className="filter__panel">
-              <div className="filter__panel-item">
+              <div ref={(el) => filterRefs.current[0] = el} className="filter__panel-item">
                 <button onClick={() => handleClickButtonFilter(1)} className={`filter__button btn ${filterActive === 1 ? 'active' : ''}`}>Harga<span>{filterActive === 1 ? '−' : '+'}</span></button>
                 <div className="filter__options">
                   <div className="filter__options-container">
+                    <div className="d-flex w-100 gap-1 justify-content-center">
+                      <span>Rp{values[0].toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
+                      −
+                      <span>Rp{values[1].toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
+                    </div>
                     <Range
                       values={values}
                       step={step}
@@ -141,7 +169,7 @@ function App() {
                       }}
                       renderTrack={({ props, children }) => (
                         <div style={{
-                          height: '1rem',
+                          height: '2rem',
                           alignItems: 'center',
                           display: 'flex',
                           padding: '0 .5rem'
@@ -170,8 +198,8 @@ function App() {
                           key={props.key}
                           style={{
                             ...props.style,
-                            height: "1rem",
-                            width: "1rem",
+                            height: "1.25rem",
+                            width: "1.25rem",
                             border: '2px solid var(--bs-dark)',
                             borderRadius: "1rem",
                             backgroundColor: "white"
@@ -179,14 +207,10 @@ function App() {
                         ></div>
                       )}
                     ></Range>
-                    <div className="d-flex w-100 justify-content-between">
-                      <span>Rp{values[0].toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
-                      <span>Rp{values[1].toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
-                    </div>
                   </div>
                 </div>
               </div>
-              <div className="filter__panel-item">
+              <div ref={(el) => filterRefs.current[1] = el} className="filter__panel-item">
                 <button onClick={() => handleClickButtonFilter(2)} className={`filter__button btn ${filterActive === 2 ? 'active' : ''}`}>Warna<span>{filterActive === 2 ? '−' : '+'}</span></button>
                 <div className="filter__options">
                   <div className="filter__options-container">
@@ -207,14 +231,14 @@ function App() {
                   </div>
                 </div>
               </div>
-              <div className="filter__panel-item">
+              <div ref={(el) => filterRefs.current[2] = el} className="filter__panel-item">
                 <button onClick={() => handleClickButtonFilter(3)} className={`filter__button btn ${filterActive === 3 ? 'active' : ''}`}>Ukuran<span>{filterActive === 3 ? '−' : '+'}</span></button>
                 <div className="filter__options">
                   <div className="filter__options-container">
-                    <div className="flex-grow-1 gap-2 overflow-auto" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+                    <div className="flex-grow-1 gap-2 overflow-auto d-grid grid-cols-4 grid-lg-cols-3">
                       {sizes.map((size) => (
                         <div key={size} className="form-group d-inline-block m-0 form-check-bg">
-                          <input type="checkbox" className="form-check-bg-input" id={size} autoComplete={false} />
+                          <input type="checkbox" className="form-check-bg-input" id={size} autoComplete="false" />
                           <label className="form-check-label text-center w-100 prevent-select rounded-0 border-dark" htmlFor={size}>{size}</label>
                         </div>
                       ))}
@@ -223,7 +247,20 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="filter__controller"></div>
+            <div className="filter__controller">
+              <div ref={(el) => filterRefs.current[3] = el} className="filter__controller-item">
+                <button onClick={() => handleClickButtonFilter(4)} className={`filter__button filter__button-sort btn ${filterActive === 4 ? 'active' : ''}`}>{sortBy.name}<span>{filterActive === 4 ? '−' : '+'}</span></button>
+                <div className="filter__options filter__options--right">
+                  <div className="filter__options-container">
+                    <ul className="list-unstyled d-flex flex-column gap-lg-3 mb-0 m-n3 mx-lg-n3 my-lg-0">
+                      {sorting.map((sort)=>(
+                        <li key={sort.sortCode} onClick={() => handleClickSortBy(sort.sortCode)} className="cursor-pointer text-lg- px-3 py-3 py-lg-0 lh-1 border-light border-bottom border-lg-0">{sort.name}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </nav>
         <div>
