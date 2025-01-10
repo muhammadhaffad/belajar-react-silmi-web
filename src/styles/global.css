@@ -106,6 +106,9 @@
     display: flex;
     justify-content: space-between;
 }
+.filter__wrapper--mobile {
+    display: none;
+}
 .filter__panel {
     display: flex;
     gap: .25rem;
@@ -113,7 +116,7 @@
 .filter__panel-item {
     position: relative;
 }
-.filter__controller-item {
+.filter__controls-item {
     position: relative;
 }
 .filter__button {
@@ -192,28 +195,51 @@
         display: flex !important;
     }
     .filter {
+        position: static;
+    }
+    .filter__wrapper {
         position: fixed;
         top: 0;
         right: 0;
         left: 0;
         z-index: 1030;
+        display: none;
+        justify-content: start;
+        flex-direction: column;
         background: white;
         height: 100vh;
-    }
-    .filter__wrapper {
         border: none;
         padding: 0;
+        flex-grow: 1;
+        overflow-y: hidden;
+    }
+    .filter__wrapper.active {
+        display: flex;
+    }
+    .filter__wrapper--mobile {
+        padding: .25rem;
+        display: flex;
+        border-bottom: 1px solid var(--bs-dark);
+        border-top: 1px solid var(--bs-dark);
+        margin: 0 calc(var(--bs-gutter-x, 1.5rem) * -1);
     }
     .filter__panel {
-        display: block;
+        display: none;
         width: 100%;
+        overflow-y: auto;
+    }
+    .filter__panel.active {
+        display: block;
     }
     .filter__panel > .filter__panel-item {
         border-bottom: 1px solid var(--bs-light);
     }
-    .filter__controller {
-        display: block;
+    .filter__controls {
+        display: none;
         width: 100%;
+    }
+    .filter__controls.active {
+        display: block;
     }
     .filter__button {
         width: 100%;
@@ -247,7 +273,7 @@
         border: none;
         border-top: 1px solid var(--bs-light);
     }
-    .filter__controller-item > .filter__options > .filter__options-container {
+    .filter__controls-item > .filter__options > .filter__options-container {
         border: none;
     }
 }

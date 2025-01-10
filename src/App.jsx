@@ -79,11 +79,11 @@ const sizes = [
   '02', '04', '06', '08', '10', '12', '14', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL'
 ]
 const sorting = [
-  {sortCode: '', name: 'Paling Sesuai'},
-  {sortCode: '3', name: 'Rilis: Baru ke Lama'},
-  {sortCode: '4', name: 'Rilis: Lama ke Baru'},
-  {sortCode: '1', name: 'Harga: Rendah ke Tinggi'},
-  {sortCode: '2', name: 'Harga: Tinggi ke Rendah'},
+  { sortCode: '', name: 'Paling Sesuai' },
+  { sortCode: '3', name: 'Rilis: Baru ke Lama' },
+  { sortCode: '4', name: 'Rilis: Lama ke Baru' },
+  { sortCode: '1', name: 'Harga: Rendah ke Tinggi' },
+  { sortCode: '2', name: 'Harga: Tinggi ke Rendah' },
 ]
 const BannerCarousel = () => {
   return (
@@ -109,6 +109,15 @@ function App() {
   const [searchColor, setSerachColor] = useState('');
   const [sortBy, setSortBy] = useState(sorting[0]);
   const [filterActive, setFilterActive] = useState(0);
+  const [chooseFilter, setChooseFilter] = useState(null);
+  const [filter, setFilter] = useState({
+    harga: [100000,400000],
+    warna: [],
+    ukuran: []
+  });
+  const [filterControl, setFilterControl] = useState({
+    sortBy: ''
+  });
   const filterRefs = useRef([]);
   const min = 0;
   const max = 500000;
@@ -124,8 +133,7 @@ function App() {
     }
   }
   const handleClickSortBy = (sortCode) => {
-    const sortSelected = sorting.filter((sort)=>sort.sortCode === sortCode).shift();
-    setSortBy(sortSelected);
+    setFilterControl({...filterControl, ['sortBy']: sortCode});
     setFilterActive(0);
   }
   useEffect(() => {
@@ -147,25 +155,30 @@ function App() {
       </header>
       <section className='container-fluid vh-100'>
         <nav className='filter'>
-          <div>asdas</div>
-          <div className="filter__wrapper">
-            <div className="filter__panel">
+          <div className="filter__wrapper--mobile">
+            <button onClick={() => setChooseFilter('panel')} className='filter__button fw-bold text-start align-items-center btn w-100'>Terapkan Filter<span>+</span></button>
+            <div className='border-end my-n1 mx-1 border-dark' />
+            <button onClick={() => setChooseFilter('control')} className='filter__button fw-bold text-start align-items-center btn w-100'>Urutkan Berdasarkan<span>+</span></button>
+          </div>
+          <div className={`filter__wrapper ${chooseFilter ? 'active' : ''}`}>
+            <div className={`filter__panel ${chooseFilter === 'panel' ? 'active' : ''}`}>
+              <div className='filter__header p-3 border-bottom text-uppercase lh-1 sticky-top top-0 bg-white d-flex align-items-center justify-content-between d-lg-none'><span>Terapkan Filter</span><button onClick={() => setChooseFilter(null)} className='btn p-0'><i className="fs-5 bi bi-x-lg"></i></button></div>
               <div ref={(el) => filterRefs.current[0] = el} className="filter__panel-item">
                 <button onClick={() => handleClickButtonFilter(1)} className={`filter__button btn ${filterActive === 1 ? 'active' : ''}`}>Harga<span>{filterActive === 1 ? '−' : '+'}</span></button>
                 <div className="filter__options">
                   <div className="filter__options-container">
                     <div className="d-flex w-100 gap-1 justify-content-center">
-                      <span>Rp{values[0].toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
+                      <span>Rp{filter.harga[0].toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
                       −
-                      <span>Rp{values[1].toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
+                      <span>Rp{filter.harga[1].toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
                     </div>
                     <Range
-                      values={values}
+                      values={filter.harga}
                       step={step}
                       min={min}
                       max={max}
                       onChange={(values) => {
-                        setValues(values);
+                        setFilter({...filter, ['harga']: values});
                       }}
                       renderTrack={({ props, children }) => (
                         <div style={{
@@ -181,7 +194,7 @@ function App() {
                               width: "100%",
                               borderRadius: "0",
                               background: getTrackBackground({
-                                values,
+                                values: filter.harga,
                                 colors: ["var(--bs-light)", "var(--bs-dark)", "var(--bs-light)"],
                                 min: min,
                                 max: max,
@@ -247,14 +260,15 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="filter__controller">
-              <div ref={(el) => filterRefs.current[3] = el} className="filter__controller-item">
-                <button onClick={() => handleClickButtonFilter(4)} className={`filter__button filter__button-sort btn ${filterActive === 4 ? 'active' : ''}`}>{sortBy.name}<span>{filterActive === 4 ? '−' : '+'}</span></button>
+            <div className={`filter__controls ${chooseFilter === 'control' ? 'active' : ''}`}>
+              <div className='filter__header p-3 border-bottom text-uppercase lh-1 sticky-top top-0 bg-white d-flex align-items-center justify-content-between d-lg-none'><span>Urutkan Berdasarkan</span><button onClick={() => setChooseFilter(null)} className='btn p-0'><i className="fs-5 bi bi-x-lg"></i></button></div>
+              <div ref={(el) => filterRefs.current[3] = el} className="filter__controls-item">
+                <button onClick={() => handleClickButtonFilter(4)} className={`filter__button filter__button-sort btn ${filterActive === 4 ? 'active' : ''}`}>{sorting.find((item) => item.sortCode === filterControl.sortBy).name}<span>{filterActive === 4 ? '−' : '+'}</span></button>
                 <div className="filter__options filter__options--right">
                   <div className="filter__options-container">
                     <ul className="list-unstyled d-flex flex-column gap-lg-3 mb-0 m-n3 mx-lg-n3 my-lg-0">
-                      {sorting.map((sort)=>(
-                        <li key={sort.sortCode} onClick={() => handleClickSortBy(sort.sortCode)} className="cursor-pointer text-lg- px-3 py-3 py-lg-0 lh-1 border-light border-bottom border-lg-0">{sort.name}</li>
+                      {sorting.map((sort) => (
+                        <li key={sort.sortCode} onClick={() => handleClickSortBy(sort.sortCode)} className={`cursor-pointer text-lg- px-3 py-3 py-lg-0 lh-1 border-light border-bottom border-lg-0 ${sort.name === sorting.find((item) => item.sortCode === filterControl.sortBy).name ? 'fw-bold' : ''}`}>{sort.name}</li>
                       ))}
                     </ul>
                   </div>
