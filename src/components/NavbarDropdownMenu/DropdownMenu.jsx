@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import '@style/navbar/dropdown-menu/dropdown-menu.css';
+import './dropdown-menu.css';
 
 const Dropdown = forwardRef((props, ref) => {
     const { children }= props;

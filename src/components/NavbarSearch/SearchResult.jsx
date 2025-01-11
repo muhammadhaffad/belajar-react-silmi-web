@@ -1,4 +1,4 @@
-import '@style/navbar/search/search-result.css';
+import './search-result.css';
 
 export const ResultItem = ({ data }) => {
     return (

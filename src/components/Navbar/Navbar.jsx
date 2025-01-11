@@ -1,10 +1,10 @@
 import useScroll from "@/hooks/useScroll";
 import { useEffect, useState } from "react";
-import NavigationMenu from "./NavigationMenu/NavigationMenu";
-import NavigationMenuItem from "./NavigationMenu/NavigationMenuItem";
-import DropdownMenu from "./DropdownMenu/DropdownMenu";
-import DropdownMenuItem from "./DropdownMenu/DropdownMenuItem";
-import Search from "./Search/Search";
+import NavigationMenu from "../NavbarNavigationMenu/NavigationMenu";
+import NavigationMenuItem from "../NavbarNavigationMenu/NavigationMenuItem";
+import DropdownMenu from "../NavbarDropdownMenu/DropdownMenu";
+import DropdownMenuItem from "../NavbarDropdownMenu/DropdownMenuItem";
+import Search from "../NavbarSearch/Search";
 
 export default function Navbar({ navigationMenu }) {
     const [isNavbarVisible, setIsNavbarVisible] = useState(true);

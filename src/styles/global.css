@@ -98,16 +98,15 @@
     width: 100%;
     position: sticky;
     top: 1rem;
-    margin-top: 1rem;
 }
-.filter__wrapper {
+.filter__container {
     border: 1px solid var(--bs-dark);
     padding: .25rem;
     width: 100%;
     display: flex;
     justify-content: space-between;
 }
-.filter__wrapper--mobile {
+.filter__container--mobile {
     display: none;
 }
 .filter__panel {
@@ -202,7 +201,7 @@
     .filter {
         position: static;
     }
-    .filter__wrapper {
+    .filter__container {
         position: fixed;
         top: 0;
         right: 0;
@@ -218,10 +217,10 @@
         flex-grow: 1;
         overflow-y: hidden;
     }
-    .filter__wrapper.active {
+    .filter__container.active {
         display: flex;
     }
-    .filter__wrapper--mobile {
+    .filter__container--mobile {
         padding: .25rem;
         display: flex;
         border-bottom: 1px solid var(--bs-dark);

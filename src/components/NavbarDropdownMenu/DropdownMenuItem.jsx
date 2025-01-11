@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Dropdown from "./DropdownMenu";
-import '@style/navbar/dropdown-menu/dropdown-menu-item.css';
+import './dropdown-menu-item.css';
 
 const DropdownItem = ({ parentName, dropdownItem }) => {
     const [isActive, setIsActive] = useState(false);

@@ -1,0 +1,33 @@
+.breadcrumbs-nav {
+    margin-top: 1rem;
+    gap: .5rem;
+    align-items: center;
+    display: flex;
+}
+.breadcrumbs-nav__back {
+    padding: 0rem;
+    font-weight: bold;
+    display: flex;
+    gap: .25rem;
+    margin-right: 1rem;
+}
+.breadcrumbs-nav__list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: .5rem;
+}
+.breadcrumbs-nav__back:hover {
+    background-color: var(--bs-dark);
+    color: white;
+}
+.breadcrumbs-nav__item:hover > a[href] {
+    background-color: var(--bs-dark);
+    color: white;
+}
+@media (max-width: 922px) {
+    .breadcrumbs-nav {
+        display: none;
+    }
+}

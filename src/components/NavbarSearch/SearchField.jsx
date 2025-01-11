@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import '@style/navbar/search/search-field.css';
+import './search-field.css';
 
 const SearchField = ({ querySearch, setQuerySearch, handleClickSearchBack, handleClickSearch, isSearchLoading }) => {
     const ref = useRef();

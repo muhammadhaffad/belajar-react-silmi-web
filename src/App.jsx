@@ -1,14 +1,16 @@
 import './styles/theme.bundle.css';
 import './styles/global.css';
 import Navbar from '@component/Navbar/Navbar';
+import Breadcrumbs from '@component/Breadcrumbs/Breadcrumbs';
+import { useEffect, useRef, useState } from 'react';
+import { numberToRupiah, urlToBreadcrumbs } from './utils/utils';
+import { getTrackBackground, Range } from 'react-range';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { getTrackBackground, Range } from 'react-range';
-import { useEffect, useRef, useState } from 'react';
 
 const navigationMenu = [
   { name: 'Our Products' },
@@ -60,12 +62,14 @@ const navigationMenu = [
     ]
   },
 ];
+
 const sliderImages = [
   'http://silmiofficial.com/assets/images/banners/silmi%20warnai%20negri.jpg',
   'http://silmiofficial.com/assets/images/banners/Dreams%20woven%20in%20the%20fabric%C2%A0of%C2%A0reality.jpg',
   'http://silmiofficial.com/assets/images/banners/renngganis.jpg',
   'http://silmiofficial.com/assets/images/banners/CLEREANCE%20SALE.jpg'
-]
+];
+
 const colors = [
   { value: 'PI', label: 'Pink' },
   { value: 'HT', label: 'Hitam' },
@@ -75,9 +79,11 @@ const colors = [
   { value: 'PT', label: 'Putih Tulang' },
   { value: 'HJ', label: 'Hijau' },
 ].sort((a, b) => a.label.localeCompare(b.label));
+
 const sizes = [
   '02', '04', '06', '08', '10', '12', '14', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL'
-]
+];
+
 const sortOptions = [
   { value: '', label: 'Paling Sesuai' },
   { value: '3', label: 'Rilis: Baru ke Lama' },
@@ -85,11 +91,8 @@ const sortOptions = [
   { value: '1', label: 'Harga: Rendah ke Tinggi' },
   { value: '2', label: 'Harga: Tinggi ke Rendah' },
 ];
-const breadcrumbsNav = [
-  {href: '', label: 'Produk'},
-  {href: '', label: 'Koko'},
-  {href: '', label: 'Koko Dewasa'},
-]
+const url = 'http://example.com/produk/koko/koko-dewasa';
+const breadcrumbsNav = urlToBreadcrumbs(url);
 
 const min = 0;
 const max = 500000;
@@ -117,7 +120,7 @@ const BannerCarousel = () => {
 function App() {
   const [searchColor, setSerachColor] = useState('');
   const [filterActive, setFilterActive] = useState(0);
-  const [chooseFilter, setChooseFilter] = useState(null);
+  const [visibleFilter, setVisibleFilter] = useState(null);
   const [filter, setFilter] = useState({
     harga: [min,max],
     warna: colors.map((color) => ({...color, ['checked']: false})),
@@ -179,41 +182,32 @@ function App() {
         <BannerCarousel></BannerCarousel>
       </header>
       <section className='container-fluid vh-100'>
-        <nav className='breadcrumbs-nav mt-3 d-flex gap-2'>
-          <div>Kembali</div>
-          <ul className='breadcrumbs-nav__list list-unstyled m-0 d-flex gap-2'>
-            {breadcrumbsNav.map(
-              (item, i) => {
-                return <>
-                  <li><a href={item.href}>{item.label}</a></li>
-                  {(breadcrumbsNav.length == (i + 1)) ? null : <span>/</span> }
-                </>
-              }
-            )}
-          </ul>          
-        </nav>
+        <Breadcrumbs breadcrumbs={breadcrumbsNav}></Breadcrumbs>
+        <h1 className='my-3'><i>{breadcrumbsNav[breadcrumbsNav.length - 1].name}</i></h1>
         <div className="filter">
-          <div className="filter__wrapper--mobile">
-            <button onClick={() => setChooseFilter('panel')} className='filter__button fw-bold text-start align-items-center btn w-100'>Terapkan Filter<span>+</span></button>
+          <div className="filter__container--mobile">
+            <button onClick={() => setVisibleFilter('panel')} className='filter__button fw-bold text-start align-items-center btn w-100'>Terapkan Filter<span>+</span></button>
             <div className='border-end my-n1 mx-1 border-dark' />
-            <button onClick={() => setChooseFilter('control')} className='filter__button fw-bold text-start align-items-center btn w-100'>Urutkan Berdasarkan<span>+</span></button>
+            <button onClick={() => setVisibleFilter('control')} className='filter__button fw-bold text-start align-items-center btn w-100'>Urutkan Berdasarkan<span>+</span></button>
           </div>
-          <div className={`filter__wrapper ${chooseFilter ? 'active' : ''}`}>
-            <div className={`filter__panel ${chooseFilter === 'panel' ? 'active' : ''}`}>
-              <div className='filter__header p-3 border-bottom text-uppercase lh-1 sticky-top top-0 bg-white d-flex align-items-center justify-content-between d-lg-none'><span>Terapkan Filter</span><button onClick={() => setChooseFilter(null)} className='btn p-0'><i className="fs-5 bi bi-x-lg"></i></button></div>
+          <div className={`filter__container ${visibleFilter ? 'active' : ''}`}>
+            <div className={`filter__panel ${visibleFilter === 'panel' ? 'active' : ''}`}>
+              <div className='filter__header p-3 border-bottom text-uppercase lh-1 sticky-top top-0 bg-white d-flex align-items-center justify-content-between d-lg-none'><span>Terapkan Filter</span><button onClick={() => setVisibleFilter(null)} className='btn p-0'><i className="fs-5 bi bi-x-lg"></i></button></div>
               <div ref={(el) => filterRefs.current[0] = el} className="filter__panel-item">
                 <button onClick={() => handleClickButtonFilter(1)} className={`filter__button btn ${filterActive === 1 ? 'active' : ''}`}>
                   <div>
                     Harga
-                    {(filter.harga[0] !== min || filter.harga[1] !== max) && <small className='filter__status--mobile'>
-                      Rp{filter.harga[0].toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} − Rp{filter.harga[1].toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
-                    </small>}
+                    <small className='filter__status--mobile'>
+                      {(filter.harga[0] !== min || filter.harga[1] !== max) && numberToRupiah(filter.harga[0])} − {numberToRupiah(filter.harga[1])}
+                    </small>
                   </div><span>{filterActive === 1 ? '−' : '+'}</span>
                 </button>
                 <div className="filter__options">
                   <div className="filter__options-container">
                     <div className="d-flex w-100 gap-1 justify-content-center">
-                      <span>Rp{filter.harga[0].toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} − Rp{filter.harga[1].toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
+                      <span>
+                        {numberToRupiah(filter.harga[0])} − {numberToRupiah(filter.harga[1])}
+                      </span>
                     </div>
                     <Range
                       values={filter.harga}
@@ -319,10 +313,10 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className={`filter__controls ${chooseFilter === 'control' ? 'active' : ''}`}>
+            <div className={`filter__controls ${visibleFilter === 'control' ? 'active' : ''}`}>
               <div className='filter__header p-3 border-bottom text-uppercase lh-1 sticky-top top-0 bg-white d-flex align-items-center justify-content-between d-lg-none'>
                 <span>Urutkan Berdasarkan</span>
-                <button onClick={() => setChooseFilter(null)} className='btn p-0'>
+                <button onClick={() => setVisibleFilter(null)} className='btn p-0'>
                   <i className="fs-5 bi bi-x-lg"></i>
                 </button>
               </div>

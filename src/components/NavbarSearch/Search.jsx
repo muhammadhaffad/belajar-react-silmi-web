@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useRef, useState } from "react";
-import '@style/navbar/search/search.css';
+import './search.css';
 import SearchField from "./SearchField";
 import SearchResult from "./SearchResult";
 
