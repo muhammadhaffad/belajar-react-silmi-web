@@ -85,6 +85,11 @@ const sortOptions = [
   { value: '1', label: 'Harga: Rendah ke Tinggi' },
   { value: '2', label: 'Harga: Tinggi ke Rendah' },
 ];
+const breadcrumbsNav = [
+  {href: '', label: 'Produk'},
+  {href: '', label: 'Koko'},
+  {href: '', label: 'Koko Dewasa'},
+]
 
 const min = 0;
 const max = 500000;
@@ -114,7 +119,7 @@ function App() {
   const [filterActive, setFilterActive] = useState(0);
   const [chooseFilter, setChooseFilter] = useState(null);
   const [filter, setFilter] = useState({
-    harga: [100000,400000],
+    harga: [min,max],
     warna: colors.map((color) => ({...color, ['checked']: false})),
     ukuran: sizes.map(item => Object.assign({}, {value: item, label: item, checked: false}))
   });
@@ -122,10 +127,6 @@ function App() {
     sortBy: sortOptions[0].value
   });
   const filterRefs = useRef([]);
-
-  const filteredColors = filter.warna.filter(
-    color => color.label.toLowerCase().includes(searchColor.toLowerCase())
-  );
 
   const handleClickButtonFilter = (index) => {
     if (index === filterActive) {
@@ -136,6 +137,17 @@ function App() {
   }
   const handleClickColorFilter = (value, checked) => {
     setFilter({...filter, ['warna']: filter.warna.map(
+      (o) => {
+        if(o.value == value) {
+          return ({...o, ['checked']: !checked})
+        } else {
+          return ({...o});
+        }
+      }
+    )})
+  }
+  const handleClickSizeFilter = (value, checked) => {
+    setFilter({...filter, ['ukuran']: filter.ukuran.map(
       (o) => {
         if(o.value == value) {
           return ({...o, ['checked']: !checked})
@@ -167,7 +179,20 @@ function App() {
         <BannerCarousel></BannerCarousel>
       </header>
       <section className='container-fluid vh-100'>
-        <nav className='filter'>
+        <nav className='breadcrumbs-nav mt-3 d-flex gap-2'>
+          <div>Kembali</div>
+          <ul className='breadcrumbs-nav__list list-unstyled m-0 d-flex gap-2'>
+            {breadcrumbsNav.map(
+              (item, i) => {
+                return <>
+                  <li><a href={item.href}>{item.label}</a></li>
+                  {(breadcrumbsNav.length == (i + 1)) ? null : <span>/</span> }
+                </>
+              }
+            )}
+          </ul>          
+        </nav>
+        <div className="filter">
           <div className="filter__wrapper--mobile">
             <button onClick={() => setChooseFilter('panel')} className='filter__button fw-bold text-start align-items-center btn w-100'>Terapkan Filter<span>+</span></button>
             <div className='border-end my-n1 mx-1 border-dark' />
@@ -180,9 +205,9 @@ function App() {
                 <button onClick={() => handleClickButtonFilter(1)} className={`filter__button btn ${filterActive === 1 ? 'active' : ''}`}>
                   <div>
                     Harga
-                    <small className='filter__status--mobile'>
+                    {(filter.harga[0] !== min || filter.harga[1] !== max) && <small className='filter__status--mobile'>
                       Rp{filter.harga[0].toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} − Rp{filter.harga[1].toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
-                    </small>
+                    </small>}
                   </div><span>{filterActive === 1 ? '−' : '+'}</span>
                 </button>
                 <div className="filter__options">
@@ -260,7 +285,7 @@ function App() {
                       <input type="text" value={searchColor} onChange={e => setSerachColor(e.target.value)} className='form-control p-0 border-0' placeholder='Cari warna...' />
                     </div>
                     <ul className='list-unstyled mb-0 d-flex flex-column flex-grow-1 gap-3 overflow-auto'>
-                      {filteredColors.map(color => (
+                      {filter.warna.filter(color => color.label.toLowerCase().includes(searchColor.toLowerCase())).map(color => (
                         <li key={color.value} className='d-flex gap-2 w-100'>
                           <input type="checkbox" checked={color.checked} onChange={() => handleClickColorFilter(color.value, color.checked)} className='border border-dark form-check-input rounded-0 m-0 prevent-select' style={{ width: '1.5rem', height: '1.5rem' }} id={color.value} />
                           <label className='w-100 cursor-pointer' htmlFor={color.value}>{color.label}</label>
@@ -274,7 +299,9 @@ function App() {
                 <button onClick={() => handleClickButtonFilter(3)} className={`filter__button btn ${filterActive === 3 ? 'active' : ''}`}>
                   <div>
                     Ukuran
-                    <small className='filter__status--mobile'>asdasd</small>
+                    <small className='filter__status--mobile'>
+                      {filter.ukuran.filter(o => o.checked).map(o => o.label).join(', ')}
+                    </small>
                   </div>
                   <span>{filterActive === 3 ? '−' : '+'}</span>
                 </button>
@@ -283,7 +310,7 @@ function App() {
                     <div className="flex-grow-1 gap-2 overflow-auto d-grid grid-cols-4 grid-lg-cols-3">
                       {filter.ukuran.map((size) => (
                         <div key={size.value} className="form-group d-inline-block m-0 form-check-bg">
-                          <input type="checkbox" checked={size.checked} className="form-check-bg-input" id={size.value} autoComplete="false" />
+                          <input type="checkbox" checked={size.checked} className="form-check-bg-input" id={size.value} autoComplete="false" onChange={() => handleClickSizeFilter(size.value, size.checked)} />
                           <label className="form-check-label text-center w-100 prevent-select rounded-0 border-dark" htmlFor={size.value}>{size.label}</label>
                         </div>
                       ))}
@@ -313,7 +340,17 @@ function App() {
               </div>
             </div>
           </div>
-        </nav>
+          <div className="filter__status d-flex gap-2 my-2 overflow-auto">
+            {
+              (filter.harga[0] !== min || filter.harga[1] !== max) &&
+              <label onClick={() => {
+                setFilter({...filter, ['harga']: [min,max]});
+              }} className='bg-light d-flex align-items-baseline gap-1 text-nowrap cursor-pointer' style={{padding: '.1rem .5rem', fontSize: '1rem'}} ><small>Rp{filter.harga[0].toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 })} − Rp{filter.harga[1].toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</small><span><i className='bi bi-x-lg' style={{fontSize: '.6rem'}}></i></span></label>
+            }
+            {filter.warna.filter(o => o.checked).map(o => (<label onClick={() => handleClickColorFilter(o.value, o.checked)} className='bg-light d-flex align-items-baseline gap-1 text-nowrap cursor-pointer' style={{padding: '.1rem .5rem', fontSize: '1rem'}} key={o.value}><small>{o.label}</small><span><i className='bi bi-x-lg' style={{fontSize: '.6rem'}}></i></span></label>))}
+            {filter.ukuran.filter(o => o.checked).map(o => (<label onClick={() => handleClickSizeFilter(o.value, o.checked)} className='bg-light d-flex align-items-baseline gap-1 text-nowrap cursor-pointer' style={{padding: '.1rem .5rem', fontSize: '1rem'}} key={o.value}><small>{o.label}</small><span><i className='bi bi-x-lg' style={{fontSize: '.6rem'}}></i></span></label>))}
+          </div>
+        </div>
         <div>
           <aside></aside>
           <main></main>

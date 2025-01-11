@@ -98,6 +98,7 @@
     width: 100%;
     position: sticky;
     top: 1rem;
+    margin-top: 1rem;
 }
 .filter__wrapper {
     border: 1px solid var(--bs-dark);
