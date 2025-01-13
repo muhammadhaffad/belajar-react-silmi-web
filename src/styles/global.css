@@ -95,6 +95,7 @@
     gap: 1rem;
 }
 .filter {
+    background: white;
     width: 100%;
     position: sticky;
     top: 1rem;
@@ -116,7 +117,7 @@
 .filter__panel-item {
     position: relative;
 }
-.filter__controls-item {
+.filter__control-item {
     position: relative;
 }
 .filter__button {
@@ -238,11 +239,11 @@
     .filter__panel > .filter__panel-item {
         border-bottom: 1px solid var(--bs-light);
     }
-    .filter__controls {
+    .filter__control {
         display: none;
         width: 100%;
     }
-    .filter__controls.active {
+    .filter__control.active {
         display: block;
     }
     .filter__button {
@@ -292,7 +293,7 @@
         border: none;
         border-top: 1px solid var(--bs-light);
     }
-    .filter__controls-item > .filter__options > .filter__options-container {
+    .filter__control-item > .filter__options > .filter__options-container {
         border: none;
     }
 }
